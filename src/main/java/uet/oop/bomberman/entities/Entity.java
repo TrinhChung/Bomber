@@ -127,15 +127,15 @@ public abstract class Entity {
      * ham auto move thử nghiệm.
      */
     public void directionReturn() {
-        if (x == posX*Sprite.SCALED_SIZE && y == posY * Sprite.SCALED_SIZE - (img.getHeight() - Sprite.SCALED_SIZE)) {
+        if (Math.abs(x - posX*Sprite.SCALED_SIZE) <= 1 && Math.abs(y - (posY * Sprite.SCALED_SIZE - (img.getHeight() - Sprite.SCALED_SIZE))) <= 1) {
             dirNew = new ArrayList<>();
             switch (direction) {
                 case "up":
                     checkGrass2(posX, posY - 1);
                     checkGrass2(posX - 1, posY);
                     checkGrass2(posX + 1, posY);
-                    if (dirNew.size() > 1) {
-                        int k = (int) (Math.random() * 30) % dirNew.size();
+                    if (dirNew.size() >= 1) {
+                        int k = (int) (Math.random() * 10) % dirNew.size();
                         direction = dirNew.get(k);
                         dirNew.clear();
                     }
@@ -144,8 +144,8 @@ public abstract class Entity {
                     checkGrass2(posX, posY + 1);
                     checkGrass2(posX - 1, posY);
                     checkGrass2(posX + 1, posY);
-                    if (dirNew.size() > 1) {
-                        int k = (int) (Math.random() * 30) % dirNew.size();
+                    if (dirNew.size() >= 1) {
+                        int k = (int) (Math.random() * 10) % dirNew.size();
                         direction = dirNew.get(k);
                         dirNew.clear();
                     }
@@ -154,8 +154,8 @@ public abstract class Entity {
                     checkGrass2(posX + 1, posY);
                     checkGrass2(posX, posY + 1);
                     checkGrass2(posX, posY - 1);
-                    if (dirNew.size() > 1) {
-                        int k = (int) (Math.random() * 30) % dirNew.size();
+                    if (dirNew.size() >= 1) {
+                        int k = (int) (Math.random() * 10) % dirNew.size();
                         direction = dirNew.get(k);
                         dirNew.clear();
                     }
@@ -164,8 +164,8 @@ public abstract class Entity {
                     checkGrass2(posX - 1, posY);
                     checkGrass2(posX, posY - 1);
                     checkGrass2(posX, posY + 1);
-                    if (dirNew.size() > 1) {
-                        int k = (int) (Math.random() * 30) % dirNew.size();
+                    if (dirNew.size() >= 1) {
+                        int k = (int) (Math.random() * 10) % dirNew.size();
                         direction = dirNew.get(k);
                         dirNew.clear();
                     }

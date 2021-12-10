@@ -25,7 +25,6 @@ public class Boss extends Entity {
     int count1 = 0;
     int count2 = 0;
     int count3 = 0;
-
     double min = 100000;
     int vel_x = 0;
     int vel_y = 0;
@@ -64,9 +63,10 @@ public class Boss extends Entity {
         /**check va cham player. */
         if(a.me < 1) {
             a.checkDie = true;
+            BombermanGame.startGame = false;
         }
         if (hp > 0) {
-            if (x + img.getWidth() >= a.getX() + 40 && x <= a.getX() && y + img.getHeight() >= a.getY() + 40 && y <= a.getY() && a.wait == 0) {
+            if (x + img.getWidth() >= a.getX() + 40 && x <= a.getX() && y + img.getHeight() >= a.getY() + 40 && y + 40 <= a.getY() + 20 && a.wait == 0) {
                 a.me--;
                 a.wait = 1;
             } else if (a.wait >= 1) {
@@ -74,13 +74,12 @@ public class Boss extends Entity {
                     a.setVel_x(0);
                     a.setVel_y(0);
                 }
-                a.wait++;
+                //a.wait++;
                 if (a.wait > 700) {
                     a.wait = 0;
                 }
             }
         }
-        System.out.println(a.me + " " + a.wait);
         if (hp > 0) {
             rage = (hp <= 80 && hp >= 60) || (hp <= 40 && hp >= 20);
             if (!rage) {
@@ -98,6 +97,7 @@ public class Boss extends Entity {
                         frame = 0;
                     }
                 }
+
                 if (count == 0) {
                     random_direction = directions[new Random().nextInt(directions.length)];
                     //frame = 0;
@@ -106,6 +106,8 @@ public class Boss extends Entity {
                     direction = "up";
                     vel_x = 0;
                     vel_y = -1;
+                    //setImg(Sprite.turtle_up[0][(int)frame % 3].getFxImage());
+                    //frame++;
                 } else if (random_direction.equals("down")) {
                     direction = "down";
                     vel_x = 0;
@@ -224,14 +226,14 @@ public class Boss extends Entity {
             //int[] choice = {-1, 1};
             //(posX + 3 >= 30) || (posX - 1 <= 0) || (posY + 3 >= 12) || (posY - 1 <= 0)
             updatePosMap();
-            if (x + img.getWidth() >= BombermanGame.WIDTH * 40 && direction.equals("right")) {
+            if (x + img.getWidth() - 40>= BombermanGame.WIDTH * 40 && direction.equals("right")) {
                 vel_x = 0;
                 vel_y = posY - 1 > BombermanGame.HEIGHT / 2 ? -1 : 1;
                 random_direction = vel_y == -1 ? "up" : "down";
                 direction = random_direction;
                 //setImg(vel_y == -1 ? Sprite.turtle_up[0][0].getFxImage() : Sprite.turtle_down[0][0].getFxImage());
                 //frame++;
-            } else if ((x <= 0) && direction.equals("left")) {
+            } else if ((x - 40 <= 0) && direction.equals("left")) {
                 vel_x = 0;
                 vel_y = posY - 1 > BombermanGame.HEIGHT / 2 ? -1 : 1;
                 random_direction = vel_y == -1 ? "up" : "down";
@@ -260,8 +262,13 @@ public class Boss extends Entity {
                             && i > 0 && i < BombermanGame.HEIGHT && j > 0 && j < BombermanGame.WIDTH) {
                         if (bombs[i][j] instanceof Bomb && !((Bomb) bombs[i][j]).getState()) {
                             hit = true;
-                            bombs[i][j] = null;
+                            bombs = null;
                             hp -= 5;
+                            BombermanGame.character.maxBoom++;
+                        } else if (bombs[i][j] instanceof BomSao && bombs[i][j].checkDie) {
+                            hit = true;
+                            bombs[i][j].checkDie = true;
+                            hp -= 10;
                             BombermanGame.character.maxBoom++;
                         }
                     }
@@ -354,6 +361,7 @@ public class Boss extends Entity {
             }
         } else {
             setImg(Sprite.turtle_die[0][0].getFxImage());
+            BombermanGame.winCheck = true;
             vel_y = 0;
             vel_x = 0;
         }

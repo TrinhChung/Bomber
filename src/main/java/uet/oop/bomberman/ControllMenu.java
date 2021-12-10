@@ -48,7 +48,7 @@ public class ControllMenu implements Initializable {
 
     @FXML
     void quit(MouseEvent event) {
-
+        System.exit(0);
     }
 
     @FXML

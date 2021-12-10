@@ -22,14 +22,9 @@ public class TransLevel implements Initializable {
 
     @FXML
     void nextLevel(MouseEvent event) throws IOException {
-        BombermanGame.le++;
-        if (BombermanGame.le == 2) BombermanGame.path = "D:\\CODE\\boom_game\\src\\main\\resources\\levels\\map1.txt";
-        if (BombermanGame.le == 3) BombermanGame.path = "D:\\CODE\\boom_game\\src\\main\\resources\\levels\\Level2.txt";
-        BombermanGame.startGame = true;
-        BombermanGame.backgroundMusicControl.pauseMedia();
-        //Stage stage = (Stage) button.getScene().getWindow();
-        //Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
-        //stage.setScene(new Scene(root));
+        Stage stage = (Stage) button.getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        stage.setScene(new Scene(root));
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {

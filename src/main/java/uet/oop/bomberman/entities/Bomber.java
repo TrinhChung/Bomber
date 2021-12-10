@@ -39,7 +39,7 @@ public class Bomber extends Entity {
     double frame = 0;
     public int maxBoom = 1;
     public int DELTASPRITE = 7;
-    public int me = 1;
+    public int me = 1 ;
 
     private int vel_x = 0;
     private int vel_y = 0;
@@ -131,6 +131,9 @@ public class Bomber extends Entity {
                             setVel_x(getSpeed());
                             setVel_y(0);
                             break;
+                        case K:
+                            BombermanGame.winCheck = true;
+                            break;
                         case SPACE:
                             if (maxBoom > 0) {
                                 Bomb bomb = new Bomb((x + soliArea.x + soliArea.width / 2) / 40, (y + soliArea.y + soliArea.height / 2)
@@ -206,6 +209,7 @@ public class Bomber extends Entity {
     @Override
     public void render(GraphicsContext gc) {
         if (wait >= 1 && wait <= 450) {
+            wait++;
             if (wait <= 370) {
                 setImg(Sprite.diePlayer[5][0].getFxImage());
             } else if (wait <= 400) {
@@ -218,6 +222,7 @@ public class Bomber extends Entity {
             }
         } else if (checkDie) {
             setImg(Sprite.diePlayer[4][0].getFxImage());
+            BombermanGame.startGame = false;
         } else {
             switch (direction) {
                 case "up":
@@ -293,25 +298,25 @@ public class Bomber extends Entity {
     public void moveBom() {
         switch (direction) {
             case "up":
-                if ((BombermanGame.bom[posY - 1][posX] instanceof Bomb || BombermanGame.bom[posY - 1][posX] instanceof BomSao) && kickBom) {
+                if ((BombermanGame.bom[posY - 1][posX] instanceof Bomb && kickBom ) || BombermanGame.bom[posY - 1][posX] instanceof BomSao) {
                     BombermanGame.bom[posY - 1][posX].direction = "up";
                     BombermanGame.bom[posY - 1][posX].move = true;
                 }
                 break;
             case "down":
-                if ((BombermanGame.bom[posY + 1][posX] instanceof Bomb || BombermanGame.bom[posY + 1][posX] instanceof BomSao) && kickBom) {
+                if ((BombermanGame.bom[posY + 1][posX] instanceof Bomb && kickBom) || BombermanGame.bom[posY + 1][posX] instanceof BomSao) {
                     BombermanGame.bom[posY + 1][posX].direction = "down";
                     BombermanGame.bom[posY + 1][posX].move = true;
                 }
                 break;
             case "left":
-                if ((BombermanGame.bom[posY][posX - 1] instanceof Bomb || BombermanGame.bom[posY][posX - 1] instanceof BomSao) && kickBom) {
+                if ((BombermanGame.bom[posY][posX - 1] instanceof Bomb  && kickBom) || BombermanGame.bom[posY][posX - 1] instanceof BomSao) {
                     BombermanGame.bom[posY][posX - 1].direction = "left";
                     BombermanGame.bom[posY][posX - 1].move = true;
                 }
                 break;
             case "right":
-                if ((BombermanGame.bom[posY][posX + 1] instanceof Bomb || BombermanGame.bom[posY][posX + 1] instanceof BomSao) && kickBom) {
+                if ((BombermanGame.bom[posY][posX + 1] instanceof Bomb  && kickBom ) || BombermanGame.bom[posY][posX + 1] instanceof BomSao) {
                     BombermanGame.bom[posY][posX + 1].direction = "right";
                     BombermanGame.bom[posY][posX + 1].move = true;
                 }

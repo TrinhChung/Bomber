@@ -23,7 +23,10 @@ public class Balloon extends Entity {
             }
             if (sprite >= 3) {
                 BombermanGame.bot[posY][posX] = null;
-                BombermanGame.countBot--;
+                if (BombermanGame.le == 1 || BombermanGame.le == 2) {
+                    BombermanGame.countBot--;
+                    if (BombermanGame.countBot == 0) BombermanGame.winCheck = true;
+                }
             }
         } else {
             collisionOn = false;

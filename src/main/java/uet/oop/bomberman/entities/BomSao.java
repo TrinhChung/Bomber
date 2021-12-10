@@ -15,6 +15,8 @@ public class BomSao extends Entity {
 
     @Override
     public void update() {
+        if (!collision && (BombermanGame.character.posX != posX || BombermanGame.character.posY !=y)) collision = true;
+        if(speed == 1) setSpeed(2);
         if (BombermanGame.bot[posY][posX] != null) {
             collision = false;
         }

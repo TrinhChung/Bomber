@@ -8,7 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Bomb extends Entity {
     private static final int STARTCOUNTDOWN = 400;
-    private int timeToExplosion = STARTCOUNTDOWN;
+    public  int timeToExplosion = STARTCOUNTDOWN;
     int count = 0;
     public static int range = 1;
     boolean returnBom = true;
@@ -25,6 +25,7 @@ public class Bomb extends Entity {
 
     @Override
     public void update() {
+        if(speed == 1) setSpeed(2);
         if (!collision && (BombermanGame.character.posX != posX || BombermanGame.character.posY != posY)
          && BombermanGame.bot[posY][posX] == null) {
             collision = true;
@@ -66,9 +67,8 @@ public class Bomb extends Entity {
             gc.drawImage(Sprite.explosionBomb[8][2 - sprite].getFxImage(), x, y);
             for (int i = 1; i <= getRange(); i++) {
                 if (posX + i < 30) {
-                    if (! (BombermanGame.tile[posY][posX + i] instanceof Wall)) {
+                    if (!(BombermanGame.tile[posY][posX + i] instanceof Wall || BombermanGame.tile[posY][posX + i] instanceof Brick)) {
                         if (i != getRange()) {
-
                             gc.drawImage(Sprite.explosionBomb[1][2 - sprite].getFxImage(),
                                     posX * 40 + i * Sprite.SCALED_SIZE, posY * 40);
                         } else if (i == getRange()) {
@@ -85,7 +85,7 @@ public class Bomb extends Entity {
 
             for (int i = 1; i <= getRange(); i++) {
                 if (posX - i >= 1) {
-                    if (! (BombermanGame.tile[posY][posX - i] instanceof Wall)) {
+                    if (! (BombermanGame.tile[posY][posX - i] instanceof Wall || BombermanGame.tile[posY][posX - i] instanceof Brick)) {
                         if (i != getRange()) {
                             gc.drawImage(Sprite.explosionBomb[2][2 - sprite].getFxImage(),
                                     posX * 40 - i * Sprite.SCALED_SIZE, posY * 40);
@@ -103,7 +103,7 @@ public class Bomb extends Entity {
 
             for (int i = 1; i <= getRange(); i++) {
                 if (posY - i >= 1) {
-                    if (! (BombermanGame.tile[posY - i][posX] instanceof Wall)) {
+                    if (! (BombermanGame.tile[posY - i][posX] instanceof Wall || BombermanGame.tile[posY - i][posX] instanceof Brick)) {
                         if (i != getRange()) {
                             gc.drawImage(Sprite.explosionBomb[0][2 - sprite].getFxImage(),
                                     posX * 40, posY * 40 - i * Sprite.SCALED_SIZE);
@@ -121,7 +121,7 @@ public class Bomb extends Entity {
 
             for (int i = 1; i <= getRange(); i++) {
                 if (posY + i < 14) {
-                    if (! (BombermanGame.tile[posY + i][posX] instanceof Wall)) {
+                    if (! (BombermanGame.tile[posY + i][posX] instanceof Wall || BombermanGame.tile[posY + i][posX] instanceof Brick)) {
                         if (i != getRange()) {
                             gc.drawImage(Sprite.explosionBomb[3][2 - sprite].getFxImage(),
                                     posX * 40, posY * 40 + i * Sprite.SCALED_SIZE);

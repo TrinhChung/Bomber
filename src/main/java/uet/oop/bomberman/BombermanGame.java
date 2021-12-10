@@ -1,12 +1,14 @@
 package uet.oop.bomberman;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -19,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 
+import javafx.util.Duration;
 import uet.oop.bomberman.Collision.CollisionChecker;
 import uet.oop.bomberman.Sound.SoundControl;
 import uet.oop.bomberman.entities.*;
@@ -42,16 +45,20 @@ public class BombermanGame implements Initializable {
     public static SoundControl dead = new SoundControl("char_dead");
     public static SoundControl run = new SoundControl("run");
     public static SoundControl buttonPress = new SoundControl("button_press");
-    public static SoundControl botDead = new SoundControl("underwater");
+    public static SoundControl botDead = new SoundControl("bot_dead");
     public static SoundControl win = new SoundControl("levelcomplete");
-    public static String path = "D:\\CODE\\boom_game\\src\\main\\resources\\levels\\level2.txt";
+    public static SoundControl loss = new SoundControl("levelfail");
+    public static String path = "D:\\CODE\\boom_game\\src\\main\\resources\\levels\\level1.txt";
+    //public static String path = "D:\\CODE\\boom_game\\src\\main\\resources\\levels\\level2.txt";
+    //public static String path = "D:\\CODE\\boom_game\\src\\main\\resources\\levels\\map1.txt";
+    public static int le = 1;
     public static final int WIDTH = 17;
     public static final int HEIGHT = 15;
     public static final int SCREEN_FPS = 120;
     public static final int SCREEN_TICKS_PER_FRAME = 1000000000 / SCREEN_FPS;
-    public static int le = 1;
 
     public static boolean startGame = true;
+    public static boolean winCheck = false;
 
     private GraphicsContext gc;
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -65,7 +72,7 @@ public class BombermanGame implements Initializable {
     public static Bomber character = null;
     boolean creatMap = true;
     public static int countBot = 0;
-
+    public static boolean setPane = true;
     @FXML
     private Canvas canvas;
 
@@ -85,44 +92,122 @@ public class BombermanGame implements Initializable {
     private ImageView kickBom;
 
     @FXML
+    private AnchorPane anchorPane;
+
+    @FXML
+    private Button buttonPrev;
+
+    @FXML
+    private AnchorPane paneWin;
+
+    @FXML
     void prev(MouseEvent event) {
-        System.out.println(1);
     }
+    public boolean checkTrans = true;
+    public static int bot_restrict = 0;
+
+    @FXML
+    void ReturnLevel(MouseEvent event) throws IOException {
+        path = "D:\\CODE\\boom_game\\src\\main\\resources\\levels\\Level2.txt";
+        countBot = 0;
+        startGame = true;
+        winCheck = false;
+        clear();
+        translateAnimation(0.1, anchorPane, -1100);
+        loss.pauseMedia();
+        setPane = true;
+        backgroundMusicControl.playMedia(true);
+        createMap();
+    }
+
+    @FXML
+    void nextLevel(MouseEvent event) throws FileNotFoundException {
+        le++;
+        if (le > 3) le = 0;
+        clear();
+        if (le ==2 ) {
+            path = "D:\\CODE\\boom_game\\src\\main\\resources\\levels\\Level2.txt";
+        }
+        if (le == 3) {
+            path = "D:\\CODE\\boom_game\\src\\main\\resources\\levels\\map1.txt";
+        }
+        countBot = 0;
+        startGame = true;
+        checkTrans = true;
+        winCheck = false;
+        translateAnimation(0.5, paneWin, -1100);
+        win.pauseMedia();
+        backgroundMusicControl.playMedia(true);
+        createMap();
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (!backgroundMusicControl.isRunning())
+        if (!backgroundMusicControl.isRunning()) {
             backgroundMusicControl.playMedia(true);
-        backgroundMusicControl.pauseMedia();
+        }
         gc = canvas.getGraphicsContext2D();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                long nextDrawTime = l + SCREEN_TICKS_PER_FRAME;
-                character.event(canvas);
-                update();
-                render();
-                labelBoom.setText("X" + character.getBOOM());
-                labelFlame.setText("X" + character.getFlame());
-                labelHP.setText("X" + character.getMe());
-                speed.setVisible(character.DELTA != 0);
-                kickBom.setVisible(character.isKickBom());
-                double remainingTime = nextDrawTime - l;
-                remainingTime = remainingTime / 1000000;
-
-                if (remainingTime < 0) {
-                    remainingTime = 0;
+                if (winCheck) {
+                    if (checkTrans) {
+                        backgroundMusicControl.pauseMedia();
+                        translateAnimation(0.5, paneWin, 1100);
+                        win.playMedia(false);
+                        checkTrans = false;
+                    }
                 }
-                try {
-                    Thread.sleep((long) remainingTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                nextDrawTime += SCREEN_TICKS_PER_FRAME;
+                else if (startGame) {
+                    long nextDrawTime = l + SCREEN_TICKS_PER_FRAME;
+                    if (le == 3) {
+                        if(bot_restrict == 0) {
+                            bot[BombermanGame.HEIGHT/2][BombermanGame.WIDTH/2 + 1] = new Balloon(BombermanGame.WIDTH/2 + 1, BombermanGame.HEIGHT/2, Sprite.crep2[0][1].getFxImage());
+                            bot[BombermanGame.HEIGHT/2][BombermanGame.WIDTH/2 - 1] = new Balloon(BombermanGame.WIDTH/2 - 1, BombermanGame.HEIGHT/2, Sprite.crep2[0][1].getFxImage());
+                            bot[BombermanGame.HEIGHT/2 + 1][BombermanGame.WIDTH/2] = new Balloon(BombermanGame.WIDTH/2, BombermanGame.HEIGHT/2 + 1, Sprite.crep2[0][1].getFxImage());
+                            bot[BombermanGame.HEIGHT/2 - 1][BombermanGame.WIDTH/2] = new Balloon(BombermanGame.WIDTH/2, BombermanGame.HEIGHT/2 - 1, Sprite.crep2[0][1].getFxImage());
+                        } if(bot_restrict == 1000) {
+                            bom[BombermanGame.HEIGHT/2][BombermanGame.WIDTH/2 + 1] = new BomSao(BombermanGame.WIDTH/2 + 1, BombermanGame.HEIGHT/2, Sprite.bomSao[0][0].getFxImage());
+                            bom[BombermanGame.HEIGHT/2][BombermanGame.WIDTH/2 - 1] = new BomSao(BombermanGame.WIDTH/2 - 1, BombermanGame.HEIGHT/2, Sprite.bomSao[0][0].getFxImage());
+                            bom[BombermanGame.HEIGHT/2 + 1][BombermanGame.WIDTH/2] = new BomSao(BombermanGame.WIDTH/2, BombermanGame.HEIGHT/2 + 1, Sprite.bomSao[0][0].getFxImage());
+                            bom[BombermanGame.HEIGHT/2 - 1][BombermanGame.WIDTH/2] = new BomSao(BombermanGame.WIDTH/2, BombermanGame.HEIGHT/2 - 1, Sprite.bomSao[0][0].getFxImage());
+                            bom[BombermanGame.HEIGHT/2][BombermanGame.WIDTH/2] = new BomSao(BombermanGame.WIDTH/2, BombermanGame.HEIGHT/2, Sprite.bomSao[0][0].getFxImage());
+                        }
+                    }
+                    bot_restrict = (bot_restrict + 1) % 3000;
+                    character.event(canvas);
+                    update();
+                    render();
+                    labelBoom.setText("X" + character.getBOOM());
+                    labelFlame.setText("X" + character.getFlame());
+                    labelHP.setText("X" + character.getMe());
+                    speed.setVisible(character.DELTA != 0);
+                    kickBom.setVisible(character.isKickBom());
+                    double remainingTime = nextDrawTime - l;
+                    remainingTime = remainingTime / 1000000;
 
+                    if (remainingTime < 0) {
+                        remainingTime = 0;
+                    }
+                    try {
+                        Thread.sleep((long) remainingTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    nextDrawTime += SCREEN_TICKS_PER_FRAME;
+                } else {
+                    if (setPane) {
+                        if (ControllMenu.mute) backgroundMusicControl.pauseMedia();
+                        loss.playMedia(false);
+                        translateAnimation(0.5, anchorPane, 1100);
+                        setPane = false;
+                    }
+                }
             }
         };
         timer.start();
+
         if (creatMap) {
             try {
                 createMap();
@@ -132,7 +217,7 @@ public class BombermanGame implements Initializable {
         }
     }
 
-    public void createMap() throws FileNotFoundException {
+    public static void createMap() throws FileNotFoundException {
         //InputStream level = new FileInputStream("D:\\boom_game\\res\\levels\\Level1.txt");
         //InputStream level = new FileInputStream("D:\\boom_game\\res\\levels\\Boss_fight.txt");
         InputStream level = new FileInputStream(path);
@@ -223,7 +308,6 @@ public class BombermanGame implements Initializable {
             }
             i++;
         }
-        creatMap = false;
     }
 
     public void update() {
@@ -261,6 +345,30 @@ public class BombermanGame implements Initializable {
                 }
                 if (Arrayboss[i][j] != null) {
                     Arrayboss[i][j].render(gc);
+                }
+            }
+        }
+    }
+    public void translateAnimation(double duration, Node node, double width) {
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(duration), node);
+        translateTransition.setByX(width);
+        translateTransition.play();
+    }
+
+    public void clear() {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (!(tile[i][j] instanceof Grass || tile[i][j] == null)) {
+                    tile[i][j]= null;
+                }
+                if (bom[i][j] != null) {
+                    bom[i][j]=null;
+                }
+                if (bot[i][j] != null) {
+                    bot[i][j]= null;
+                }
+                if (Arrayboss[i][j] != null) {
+                    Arrayboss[i][j] = null;
                 }
             }
         }
