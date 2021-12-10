@@ -127,7 +127,7 @@ public abstract class Entity {
      * ham auto move thử nghiệm.
      */
     public void directionReturn() {
-        if (Math.abs(x - posX*Sprite.SCALED_SIZE) <= 1 && Math.abs(y - (posY * Sprite.SCALED_SIZE - (img.getHeight() - Sprite.SCALED_SIZE))) <= 1) {
+        if (Math.abs(x - posX*Sprite.SCALED_SIZE) == 0 && Math.abs(y - (posY * Sprite.SCALED_SIZE - (img.getHeight() - Sprite.SCALED_SIZE))) == 0) {
             dirNew = new ArrayList<>();
             switch (direction) {
                 case "up":

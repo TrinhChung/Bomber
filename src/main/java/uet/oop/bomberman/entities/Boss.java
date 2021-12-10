@@ -57,8 +57,6 @@ public class Boss extends Entity {
         updatePosMap();
     }
 
-
-
     public void optimize(Bomber a) {
         /**check va cham player. */
         if(a.me < 1) {
@@ -74,7 +72,6 @@ public class Boss extends Entity {
                     a.setVel_x(0);
                     a.setVel_y(0);
                 }
-                //a.wait++;
                 if (a.wait > 700) {
                     a.wait = 0;
                 }
@@ -85,7 +82,6 @@ public class Boss extends Entity {
             if (!rage) {
                 count2 = 0;
                 count3 = 0;
-                //count = 0;
                 count++;
                 if (count > 500) {
                     count = 0;
@@ -100,7 +96,6 @@ public class Boss extends Entity {
 
                 if (count == 0) {
                     random_direction = directions[new Random().nextInt(directions.length)];
-                    //frame = 0;
                 }
                 if (random_direction.equals("up")) {
                     direction = "up";
@@ -258,18 +253,20 @@ public class Boss extends Entity {
             updatePosMap();
             for (int i = posY - 2 - Bomb.range; i <= posY + Bomb.range; i++) {
                 for (int j = posX - Bomb.range; j <= posX + 3 + Bomb.range; j++) {
-                    if (!(i < posY - 2 && j < posX) && !(i < posY - 2 && j > posX + 3) && !(i > posY && j > posX + 3) && !(i > posY && j < posX)
-                            && i > 0 && i < BombermanGame.HEIGHT && j > 0 && j < BombermanGame.WIDTH) {
-                        if (bombs[i][j] instanceof Bomb && !((Bomb) bombs[i][j]).getState()) {
-                            hit = true;
-                            bombs = null;
-                            hp -= 5;
-                            BombermanGame.character.maxBoom++;
-                        } else if (bombs[i][j] instanceof BomSao && bombs[i][j].checkDie) {
-                            hit = true;
-                            bombs[i][j].checkDie = true;
-                            hp -= 10;
-                            BombermanGame.character.maxBoom++;
+                    if (i >= 0 && i < 17 && j >=0 && j < 15) {
+                        if (!(i < posY - 2 && j < posX) && !(i < posY - 2 && j > posX + 3) && !(i > posY && j > posX + 3) && !(i > posY && j < posX)
+                                && i > 0 && i < BombermanGame.HEIGHT && j > 0 && j < BombermanGame.WIDTH) {
+                            if (bombs[i][j] instanceof Bomb && !((Bomb) bombs[i][j]).getState()) {
+                                hit = true;
+                                bombs[i][j] = null;
+                                hp -= 5;
+                                BombermanGame.character.maxBoom++;
+                            } else if ((i == posY || i == posY - 2 || j == posX || j == posX + 3) && bombs[i][j] instanceof BomSao && bombs[i][j].move) {
+                                hit = true;
+                                bombs[i][j].checkDie = true;
+                                hp -= 10;
+                                BombermanGame.character.maxBoom++;
+                            }
                         }
                     }
                 }

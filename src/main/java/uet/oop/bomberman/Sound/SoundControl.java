@@ -28,7 +28,7 @@ public class SoundControl {
     }
 
     private static boolean mute = true;
-    private double volume = 0.5;
+    private double volume = 0.3;
 
     public SoundControl(String soundName) {
         sounds = new HashMap<>();
@@ -46,6 +46,7 @@ public class SoundControl {
 
     public void playMedia(boolean isInfinite) {
         mute = ControllMenu.mute;
+        //setVolume(0.3);
         running = true;
         if (isInfinite) {
             mediaPlayer = new MediaPlayer(media);
@@ -59,9 +60,11 @@ public class SoundControl {
     }
 
     public void pauseMedia() {
-        mediaPlayer.pause();
-        setVolume(0);
-        mediaPlayer.seek(Duration.seconds(0));
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+            setVolume(0);
+            mediaPlayer.seek(Duration.seconds(0));
+        }
     }
 
     public void setVolume(double volume) {

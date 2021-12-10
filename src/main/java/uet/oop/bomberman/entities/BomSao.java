@@ -83,10 +83,23 @@ public class BomSao extends Entity {
     @Override
     public void render(GraphicsContext gc) {
         if (!checkDie) {
-            setImg(Sprite.bomSao[0][sprite].getFxImage());
+            setImg(Sprite.bomSao[0][sprite%2].getFxImage());
         } else {
-            setImg(Sprite.no[0][sprite].getFxImage());
+            setImg(Sprite.no[0][sprite%2].getFxImage());
         }
         super.render(gc);
     }
+
+    public void checkBoss() {
+        for (int i = -1; i <= 1;i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (BombermanGame.boss.posX + i >= 0 && BombermanGame.boss.posX + i < BombermanGame.WIDTH
+                        && BombermanGame.boss.posY + j >= 0 && BombermanGame.boss.posY + j < BombermanGame.WIDTH) {
+                    if (posX == BombermanGame.boss.posX + i) checkDie = true;
+                    if (posY == BombermanGame.boss.posY + j) checkDie = true;
+                }
+            }
+        }
+    }
+
 }

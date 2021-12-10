@@ -39,7 +39,7 @@ public class Bomber extends Entity {
     double frame = 0;
     public int maxBoom = 1;
     public int DELTASPRITE = 7;
-    public int me = 1 ;
+    public int me = 5 ;
 
     private int vel_x = 0;
     private int vel_y = 0;

@@ -27,6 +27,7 @@ public class Balloon extends Entity {
                     BombermanGame.countBot--;
                     if (BombermanGame.countBot == 0) BombermanGame.winCheck = true;
                 }
+                if (BombermanGame.le == 3) BombermanGame.bom[posY][posX] = new BomSao(posX, posY, Sprite.bomSao[0][0].getFxImage());
             }
         } else {
             collisionOn = false;
@@ -74,7 +75,7 @@ public class Balloon extends Entity {
                 }
                 if (Math.sqrt(Math.pow(posX - BombermanGame.character.posX, 2) + Math.pow(posY - BombermanGame.character.posY, 2)) <= 4) {
                     DELTA = 1;
-                } else DELTA = 0.6;
+                } else DELTA = 0.7;
                 countDelay += DELTA;
             }
         }

@@ -27,7 +27,6 @@ public class Oneal extends Entity {
                     BombermanGame.countBot--;
                     if (BombermanGame.countBot == 0) BombermanGame.winCheck = true;
                 }
-                if (BombermanGame.le == 3) BombermanGame.bom[posY][posX] = new BomSao(posX, posY, Sprite.bomSao[0][0].getFxImage());
             }
         } else {
             collisionOn = false;

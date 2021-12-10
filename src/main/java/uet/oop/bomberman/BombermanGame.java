@@ -117,6 +117,7 @@ public class BombermanGame implements Initializable {
         loss.pauseMedia();
         setPane = true;
         backgroundMusicControl.playMedia(true);
+        backgroundMusicControl.setVolume(0.2);
         createMap();
     }
 
@@ -138,6 +139,7 @@ public class BombermanGame implements Initializable {
         translateAnimation(0.5, paneWin, -1100);
         win.pauseMedia();
         backgroundMusicControl.playMedia(true);
+        backgroundMusicControl.setVolume(0.2);
         createMap();
     }
 
@@ -146,6 +148,7 @@ public class BombermanGame implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         if (!backgroundMusicControl.isRunning()) {
             backgroundMusicControl.playMedia(true);
+            backgroundMusicControl.setVolume(0.2);
         }
         gc = canvas.getGraphicsContext2D();
         AnimationTimer timer = new AnimationTimer() {
@@ -322,8 +325,8 @@ public class BombermanGame implements Initializable {
                 if (!(/*tile[i][j] instanceof Bomber || */tile[i][j] == null))
                     tile[i][j].update();
                 if (Arrayboss[i][j] != null) {
-                    boss.optimize(character);
                     Arrayboss[i][j].update();
+                    boss.optimize(character);
                 }
             }
         }
